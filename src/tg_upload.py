@@ -73,9 +73,17 @@ def upload(sub, file_path, caption, trys=0, bot_id=0):
         time.sleep(1)
         return upload(sub, file_path, caption, trys + 1, (bot_id + 1) % BOTS_LEN)
     if response.status_code == 200:
+
+        if response.json()["ok"]:
+            msg_id = response.json()["result"]["message_id"]
+        else:
+            msg_id = -1
+            logging.error(
+                f"Error uploading {sub['title']}, id: {sub['id']}: {response.json()['description']}"
+            )
         cur.execute(
             "UPDATE all_subs SET tg_post_id = ? WHERE id = ? LIMIT 1",
-            (response.json()["result"]["message_id"], sub["id"]),
+            (msg_id, sub["id"]),
         )
         return bot_id
     elif response.status_code == 429:
@@ -113,8 +121,9 @@ def main():
             caption_list.append(f"✍️ <i>{strip_html(sub['author_name'])}</i>")
 
         if sub["imdb"]:
+            imdb = "%07d" % sub["imdb"]
             caption_list.append(
-                f"🎥 <a href='https://www.imdb.com/title/tt{sub['imdb']}'>IMDb</a> | <code>tt{sub['imdb']}</code>"
+                f"🎥 <a href='https://www.imdb.com/title/tt{imdb}'>IMDb</a> | #tt{imdb}"
             )
 
         caption_list.append(f"🆔 <code>{sub['id']}</code>")
