@@ -15,7 +15,7 @@ BOTS_LEN = len(BOT_TOKENS)
 MAX_UPLOAD_TRYS = BOTS_LEN
 
 logging.basicConfig(
-    level=logging.WARNING,
+    level=logging.ERROR,
     format="%(asctime)s | %(levelname)s | %(message)s",
     filename="tg.log",
     filemode="a",
@@ -69,7 +69,7 @@ def upload(sub, file_path, caption, trys=0, bot_id=0):
         )
         file.close()
     except:
-        logging.error(f"Error sending request to bot {bot_id}")
+        logging.warning(f"Error sending request to bot {bot_id}")
         time.sleep(1)
         return upload(sub, file_path, caption, trys + 1, (bot_id + 1) % BOTS_LEN)
     if response.status_code == 200:
