@@ -1,6 +1,7 @@
 import logging
 import os
 import sys
+import time
 
 import mariadb
 import requests
@@ -49,6 +50,7 @@ def strip_html(text):
 def upload():
     for sub in cur.fetchall():
         with open(f"{SUBS_PATH}/{sub['fileLink']}", "rb") as f:
+
             caption_list = []
             if sub["title"]:
                 caption_list.append(f"📽 <b>{strip_html(sub['title'])}</b>")
@@ -99,6 +101,9 @@ def upload():
                     "UPDATE all_subs SET tg_post_id = ? WHERE id = ? LIMIT 1",
                     (response.json()["result"]["message_id"], sub["id"]),
                 )
+                time.sleep(3)
+            elif response.status_code == 429:
+                time.sleep(response.json()["parameters"]["retry_after"])
             else:
                 logging.error(
                     f"Error uploading {sub['title']}, id: {sub['id']}: {response.text}"
