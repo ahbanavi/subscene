@@ -31,7 +31,7 @@ except mariadb.Error as e:
     sys.exit(1)
 
 
-# conn.autocommit = True
+conn.autocommit = True
 
 # Get Cursor
 cur = conn.cursor(dictionary=True)
