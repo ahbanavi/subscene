@@ -102,6 +102,10 @@ def upload(sub, file_path, caption, trys=0, bot_id=0):
         logging.error(
             f"Error uploading {sub['title']}, id: {sub['id']}: {response.text}"
         )
+        cur.execute(
+            "UPDATE all_subs SET tg_post_id = ? WHERE id = ? LIMIT 1",
+            (-1, sub["id"]),
+        )
         return bot_id
 
 
@@ -146,7 +150,7 @@ def main():
             caption = caption[:1000]
             if release:
                 if caption.count("<pre>") == 1 and caption.count("</pre>") == 0:
-                    caption += "</pre>"
+                    caption = caption[:990] + "</pre>"
 
         bot_id = upload(sub, file_path, caption, 0, bot_id)
 
