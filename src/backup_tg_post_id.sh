@@ -13,6 +13,4 @@ TIMESTAMP=$(date +%Y-%m-%d-%H-%M-%S)
 
 ssh -o StrictHostKeyChecking=no -p $SSH_PORT $SSH_USER@$SSH_HOST "mysql -h localhost -u $USER -p$PASSWORD $DB -e \"SELECT id, tg_post_id FROM all_subs WHERE tg_post_id IS NOT NULL\"" > backup_all_subs_${TIMESTAMP}.sql
 
-# Choose one of the above commented options based on your setup
-
 echo "Backup completed at $TIMESTAMP"
