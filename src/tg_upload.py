@@ -60,6 +60,7 @@ def upload(sub, file_path, caption, trys=0, bot_id=0):
         "chat_id": CHANNEL_ID,
         "caption": caption,
         "parse_mode": "HTML",
+        "disable_notification": True,
     }
     try:
         response = requests.post(
