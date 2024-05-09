@@ -78,7 +78,7 @@ def upload(sub, file_path, caption, trys=0, bot_id=0):
         if response.json()["ok"]:
             msg_id = response.json()["result"]["message_id"]
         else:
-            msg_id = -1
+            msg_id = sub["id"] * -1
             logging.error(
                 f"Error uploading {sub['title']}, id: {sub['id']}: {response.json()['description']}"
             )
@@ -105,7 +105,7 @@ def upload(sub, file_path, caption, trys=0, bot_id=0):
         )
         cur.execute(
             "UPDATE all_subs SET tg_post_id = ? WHERE id = ? LIMIT 1",
-            (-1, sub["id"]),
+            (sub["id"] * -1, sub["id"]),
         )
         return bot_id
 
